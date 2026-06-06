@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-06-06T14:58:48Z",
-  "timestamp_de": "06.06.2026 16:58:48",
+  "timestamp": "2026-06-06T15:08:59Z",
+  "timestamp_de": "06.06.2026 17:08:59",
   "all_ok": false,
   "errors": ["EMS-FSN-SW-1: Ring-Port tg0/26 ist DOWN","EMS-FSN-SW-2: Ring-Port tg0/26 ist DOWN"],
   "devices": [{"name":"FortiGate","ip":"10.10.1.254","online":true},{"name":"EMS-FSN-SW-1","ip":"10.10.1.1","online":true},{"name":"EMS-FSN-SW-2","ip":"10.10.1.2","online":true}],
