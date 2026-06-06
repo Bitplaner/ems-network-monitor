@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-06-06T00:00:00Z",
+  "timestamp_de": "06.06.2026 00:00:00",
+  "all_ok": false,
+  "errors": ["Monitoring-Script noch nicht aktiv"],
+  "devices": [
+    {"name": "FortiGate", "ip": "10.10.1.254", "online": false},
+    {"name": "EMS-FSN-SW-1", "ip": "10.10.1.1", "online": false},
+    {"name": "EMS-FSN-SW-2", "ip": "10.10.1.2", "online": false}
+  ],
+  "ring_ports": []
+}
