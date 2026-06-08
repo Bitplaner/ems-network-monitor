@@ -296,7 +296,11 @@
     background: #0d2b1a;
     border-color: #166534;
     color: #4ade80;
-    cursor: default;
+    cursor: pointer;
+  }
+  .ack-btn.acked:hover {
+    background: #1a3a25;
+    border-color: #4ade80;
   }
 
   /* Zeitstempel */
@@ -454,20 +458,28 @@ function renderErrors(errors) {
       const isAcked = acked.has(e);
       return `<div class="error-item">
         <span class="error-text ${isAcked ? 'acked' : ''}">${e}</span>
-        <button class="ack-btn ${isAcked ? 'acked' : ''}"
-          data-idx="${i}"
-          ${isAcked ? 'disabled' : ''}>
+        <button class="ack-btn ${isAcked ? 'acked' : ''}" data-idx="${i}">
           ${isAcked ? '✓ Bestätigt' : 'Bestätigen'}
         </button>
       </div>`;
     }).join('')}
   </div>`;
 
-  // Event-Listener auf Buttons setzen (kein inline onclick → kein Escaping-Problem)
-  errorDiv.querySelectorAll('.ack-btn:not([disabled])').forEach(btn => {
+  // Event-Listener auf alle Buttons setzen — Klick togglet Bestätigung
+  errorDiv.querySelectorAll('.ack-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const idx = parseInt(btn.dataset.idx);
-      ackError(errors[idx]);
+      const err = errors[idx];
+      const acked = getAcked();
+      if (acked.has(err)) {
+        acked.delete(err);
+        saveAcked(acked);
+      } else {
+        ackError(err);
+        return;
+      }
+      renderErrors(window._lastErrors || []);
+      updateBanner(window._lastData);
     });
   });
 }
