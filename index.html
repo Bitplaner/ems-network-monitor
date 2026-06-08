@@ -445,22 +445,31 @@ function renderErrors(errors) {
   const errorDiv = document.getElementById('errorList');
   if (!errors || errors.length === 0) {
     errorDiv.innerHTML = '';
+    // Event-Listener neu setzen nach innerHTML-Reset
     return;
   }
   errorDiv.innerHTML = `<div class="errors">
     <h3>Fehler</h3>
-    ${errors.map(e => {
+    ${errors.map((e, i) => {
       const isAcked = acked.has(e);
       return `<div class="error-item">
         <span class="error-text ${isAcked ? 'acked' : ''}">${e}</span>
         <button class="ack-btn ${isAcked ? 'acked' : ''}"
-          onclick="${isAcked ? '' : `ackError(${JSON.stringify(e)})`}"
+          data-idx="${i}"
           ${isAcked ? 'disabled' : ''}>
           ${isAcked ? '✓ Bestätigt' : 'Bestätigen'}
         </button>
       </div>`;
     }).join('')}
   </div>`;
+
+  // Event-Listener auf Buttons setzen (kein inline onclick → kein Escaping-Problem)
+  errorDiv.querySelectorAll('.ack-btn:not([disabled])').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.idx);
+      ackError(errors[idx]);
+    });
+  });
 }
 
 function updateBanner(data) {
