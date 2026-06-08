@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-06-08T10:22:56Z",
-  "timestamp_de": "08.06.2026 12:22:56",
+  "timestamp": "2026-06-08T10:24:01Z",
+  "timestamp_de": "08.06.2026 12:24:01",
   "all_ok": false,
   "errors": ["AP AP Foodtruck1 (U7-MSH) (10.10.1.42) ist nicht erreichbar","EMS-FSN-SW-2: Ring-Port tg0/26 ist DOWN"],
   "devices": [{"name":"FortiGate","ip":"10.10.1.254","url":"https://10.10.1.254","online":true},{"name":"EMS-FSN-SW-1","ip":"10.10.1.1","url":"http://10.10.1.1","online":true},{"name":"EMS-FSN-SW-2","ip":"10.10.1.2","url":"http://10.10.1.2","online":true}],
