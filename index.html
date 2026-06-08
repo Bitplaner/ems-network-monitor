@@ -274,7 +274,9 @@
   <div class="subtitle">FSN · Glasfaser-Ring · 7× S3400-24T4SP</div>
 </div>
 
-<div class="refresh-bar">
+<div id="dataAgeBanner" style="display:none; max-width:500px; margin:10px auto 0; border-radius:12px; padding:11px 18px; text-align:center; font-size:14px; font-weight:600; font-family:monospace;"></div>
+
+<div class="refresh-bar" style="margin-top:10px">
   <div class="refresh-progress" id="progressBar" style="width:100%"></div>
 </div>
 
@@ -335,13 +337,39 @@ async function fetchStatus() {
     const data = await res.json();
 
     const stale = isDataStale(data.timestamp);
-    document.getElementById('offlineWarning').style.display = stale ? 'block' : 'none';
+    const ageStr = formatAge(data.timestamp);
+    const diffSec = Math.floor((new Date() - new Date(data.timestamp)) / 1000);
+
+    // Daten-Alter Banner oben
+    const ageBanner = document.getElementById('dataAgeBanner');
+    ageBanner.style.display = 'block';
+    if (diffSec < 300) {
+      ageBanner.style.background = '#0d2b1a';
+      ageBanner.style.border = '1px solid #166534';
+      ageBanner.style.color = '#4ade80';
+      ageBanner.innerHTML = `🕐 Daten aktuell &nbsp;·&nbsp; ${ageStr} &nbsp;·&nbsp; ${data.timestamp_de}`;
+    } else if (diffSec < 900) {
+      ageBanner.style.background = '#1a1a00';
+      ageBanner.style.border = '1px solid #5c5000';
+      ageBanner.style.color = '#fbbf24';
+      ageBanner.innerHTML = `⚠ Daten ${ageStr} alt &nbsp;·&nbsp; ${data.timestamp_de}`;
+    } else {
+      ageBanner.style.background = '#2b0d0d';
+      ageBanner.style.border = '1px solid #7f1d1d';
+      ageBanner.style.color = '#f87171';
+      ageBanner.innerHTML = `🔴 Daten ${ageStr} alt — Monitor offline? &nbsp;·&nbsp; ${data.timestamp_de}`;
+    }
+
+    document.getElementById('offlineWarning').style.display = 'none';
 
     // Status Banner
     const banner = document.getElementById('statusBanner');
     if (data.all_ok && !stale) {
       banner.className = 'status-banner ok';
       banner.innerHTML = '<div class="status-icon">✅</div><div class="status-text">Alles Online</div>';
+    } else if (stale) {
+      banner.className = 'status-banner loading';
+      banner.innerHTML = '<div class="status-icon">⏸</div><div class="status-text">Monitoring pausiert</div>';
     } else {
       banner.className = 'status-banner error';
       banner.innerHTML = '<div class="status-icon">🔴</div><div class="status-text">Probleme erkannt</div>';
