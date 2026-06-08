@@ -345,8 +345,7 @@
 </div>
 
 <script>
-// GitHub API liefert immer frische Daten (kein CDN-Cache)
-const JSON_URL = 'https://api.github.com/repos/Bitplaner/ems-network-monitor/contents/status.json';
+const GITHUB_REPO = 'Bitplaner/ems-network-monitor';
 const REFRESH_INTERVAL = 30; // Sekunden für Webpage-Refresh
 const DATA_MAX_AGE = 5 * 60; // 5 Min = Daten gelten als veraltet
 
@@ -375,13 +374,21 @@ function portBadge(status, name) {
 
 async function fetchStatus() {
   try {
-    const res = await fetch(JSON_URL, {
-      headers: { 'Accept': 'application/vnd.github.v3+json' },
-      cache: 'no-store'
-    });
+    // Erst aktuellen Commit-SHA holen → dann Datei mit SHA abrufen (nie gecacht)
+    const commitRes = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/commits/main`,
+      { headers: { 'Accept': 'application/vnd.github.v3+json' }, cache: 'no-store' }
+    );
+    if (!commitRes.ok) throw new Error('Commit fetch: HTTP ' + commitRes.status);
+    const commit = await commitRes.json();
+    const sha = commit.sha;
+
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/status.json?ref=${sha}`,
+      { headers: { 'Accept': 'application/vnd.github.v3+json' }, cache: 'no-store' }
+    );
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const meta = await res.json();
-    // Inhalt ist Base64-kodiert in der GitHub API
     const data = JSON.parse(atob(meta.content.replace(/\n/g, '')));
 
     const stale = isDataStale(data.timestamp);
