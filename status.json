@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-06-08T07:54:47Z",
-  "timestamp_de": "08.06.2026 09:54:47",
+  "timestamp": "2026-06-08T07:55:51Z",
+  "timestamp_de": "08.06.2026 09:55:51",
   "all_ok": false,
   "errors": ["AP AP Foodtruck1 (U7-MSH) (10.10.1.36) ist nicht erreichbar","EMS-FSN-SW-1: Ring-Port tg0/25 ist DOWN","EMS-FSN-SW-2: Ring-Port tg0/26 ist DOWN"],
   "devices": [{"name":"FortiGate","ip":"10.10.1.254","url":"https://10.10.1.254","online":true},{"name":"EMS-FSN-SW-1","ip":"10.10.1.1","url":"http://10.10.1.1","online":true},{"name":"EMS-FSN-SW-2","ip":"10.10.1.2","url":"http://10.10.1.2","online":true}],
   "ring_ports": [{"switch":"EMS-FSN-SW-1","ip":"10.10.1.1","tg0_25":"down","tg0_26":"up"},{"switch":"EMS-FSN-SW-2","ip":"10.10.1.2","tg0_25":"up","tg0_26":"down"}],
-  "access_points": [{"name":"CloudKey (Controller)","ip":"10.10.1.24","online":true,"rtt":3},{"name":"AP Regie (U6-LR)","ip":"10.10.1.21","online":true,"rtt":2},{"name":"AP Foodtruck1 (U7-MSH)","ip":"10.10.1.36","online":false,"rtt":0}]
+  "access_points": [{"name":"CloudKey (Controller)","ip":"10.10.1.24","online":true,"rtt":3},{"name":"AP Regie (U6-LR)","ip":"10.10.1.21","online":true,"rtt":4},{"name":"AP Foodtruck1 (U7-MSH)","ip":"10.10.1.36","online":false,"rtt":0}]
 }
