@@ -345,7 +345,8 @@
 </div>
 
 <script>
-const JSON_URL = 'https://raw.githubusercontent.com/Bitplaner/ems-network-monitor/main/status.json';
+// GitHub API liefert immer frische Daten (kein CDN-Cache)
+const JSON_URL = 'https://api.github.com/repos/Bitplaner/ems-network-monitor/contents/status.json';
 const REFRESH_INTERVAL = 30; // Sekunden für Webpage-Refresh
 const DATA_MAX_AGE = 5 * 60; // 5 Min = Daten gelten als veraltet
 
@@ -374,9 +375,14 @@ function portBadge(status, name) {
 
 async function fetchStatus() {
   try {
-    const res = await fetch(JSON_URL + '?t=' + Date.now());
+    const res = await fetch(JSON_URL, {
+      headers: { 'Accept': 'application/vnd.github.v3+json' },
+      cache: 'no-store'
+    });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
+    const meta = await res.json();
+    // Inhalt ist Base64-kodiert in der GitHub API
+    const data = JSON.parse(atob(meta.content.replace(/\n/g, '')));
 
     const stale = isDataStale(data.timestamp);
     const ageStr = formatAge(data.timestamp);
