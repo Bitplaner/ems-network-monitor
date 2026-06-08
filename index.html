@@ -164,6 +164,45 @@
     border: 1px solid #7f1d1d;
   }
 
+  .device-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #4a90d9;
+    text-decoration: none;
+    font-family: monospace;
+    opacity: 0.8;
+  }
+  .device-link:hover { opacity: 1; text-decoration: underline; }
+
+  /* AP Section */
+  .ap-card {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #2a2a2a;
+  }
+  .ap-card.online { border-color: #1a3a25; }
+  .ap-card.offline { border-color: #3a1a1a; }
+  .ap-info { flex: 1; }
+  .ap-name { font-size: 15px; font-weight: 600; color: #fff; }
+  .ap-ip { font-size: 12px; color: #555; font-family: monospace; margin-top: 2px; }
+  .ap-right { display: flex; align-items: center; gap: 10px; }
+  .ap-rtt {
+    font-size: 12px;
+    font-family: monospace;
+    color: #888;
+    min-width: 50px;
+    text-align: right;
+  }
+  .ap-rtt.fast { color: #4ade80; }
+  .ap-rtt.slow { color: #fbbf24; }
+
   .dot {
     width: 8px;
     height: 8px;
@@ -297,6 +336,9 @@
 <div class="section-title">Glasfaser-Ring Ports</div>
 <div class="ring-cards" id="ringList"></div>
 
+<div class="section-title">Access Points</div>
+<div class="devices" id="apList"></div>
+
 <div class="timestamp-bar" id="timestamps">
   Letztes Update: <span id="lastUpdate">—</span><br>
   Nächster Check: <span id="nextCheck">—</span>
@@ -393,6 +435,7 @@ async function fetchStatus() {
         <div class="device-info">
           <div class="device-name">${d.name}</div>
           <div class="device-ip">${d.ip}</div>
+          ${d.url ? `<a class="device-link" href="${d.url}" target="_blank">🔗 Web-UI öffnen</a>` : ''}
         </div>
         <div class="device-badge ${d.online ? 'online' : 'offline'}">
           <div class="dot ${d.online ? 'online' : 'offline'}"></div>
@@ -400,6 +443,32 @@ async function fetchStatus() {
         </div>
       </div>
     `).join('');
+
+    // Access Points
+    const apList = document.getElementById('apList');
+    const aps = data.access_points || [];
+    if (aps.length === 0) {
+      apList.innerHTML = '<div style="color:#444;font-size:13px;text-align:center;padding:10px">Keine APs konfiguriert</div>';
+    } else {
+      apList.innerHTML = aps.map(ap => {
+        const rttClass = ap.rtt < 10 ? 'fast' : ap.rtt < 50 ? '' : 'slow';
+        const rttText = ap.online ? `${ap.rtt} ms` : '—';
+        return `
+        <div class="device-card ${ap.online ? 'online' : 'offline'}">
+          <div class="device-info">
+            <div class="device-name">${ap.name}</div>
+            <div class="device-ip">${ap.ip}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="ap-rtt ${rttClass}">${rttText}</span>
+            <div class="device-badge ${ap.online ? 'online' : 'offline'}">
+              <div class="dot ${ap.online ? 'online' : 'offline'}"></div>
+              ${ap.online ? 'Online' : 'Offline'}
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
 
     // Ring Ports
     const ringList = document.getElementById('ringList');
