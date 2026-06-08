@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-06-08T12:19:28Z",
-  "timestamp_de": "08.06.2026 14:19:28",
+  "timestamp": "2026-06-08T12:20:53Z",
+  "timestamp_de": "08.06.2026 14:20:53",
   "all_ok": false,
   "errors": ["EMS-FSN-SW-3 (10.10.1.3) ist nicht erreichbar","EMS-FSN-SW-4 (10.10.1.4) ist nicht erreichbar","EMS-FSN-SW-5 (10.10.1.5) ist nicht erreichbar","AP AP Regie aussen (U7-MSH) (10.10.1.41) ist nicht erreichbar","AP AP Foodtruck1 (U7-MSH) (10.10.1.42) ist nicht erreichbar","EMS-FSN-SW-2 (VIP): Ring-Port tg0/26 ist DOWN","EMS-FSN-SW-6: Ring-Port tg0/26 ist DOWN"],
   "devices": [{"name":"FortiGate","ip":"10.10.1.254","url":"https://10.10.1.254","online":true},{"name":"EMS-FSN-SW-1","ip":"10.10.1.1","url":"http://10.10.1.1","online":true},{"name":"EMS-FSN-SW-2 (VIP)","ip":"10.10.1.2","url":"http://10.10.1.2","online":true},{"name":"EMS-FSN-SW-3","ip":"10.10.1.3","url":"http://10.10.1.3","online":false},{"name":"EMS-FSN-SW-4","ip":"10.10.1.4","url":"http://10.10.1.4","online":false},{"name":"EMS-FSN-SW-5","ip":"10.10.1.5","url":"http://10.10.1.5","online":false},{"name":"EMS-FSN-SW-6","ip":"10.10.1.6","url":"http://10.10.1.6","online":true},{"name":"EMS-FSN-SW-7 (FOH)","ip":"10.10.1.7","url":"http://10.10.1.7","online":true}],
   "ring_ports": [{"switch":"EMS-FSN-SW-1","ip":"10.10.1.1","tg0_25":"up","tg0_26":"up"},{"switch":"EMS-FSN-SW-2 (VIP)","ip":"10.10.1.2","tg0_25":"up","tg0_26":"down"},{"switch":"EMS-FSN-SW-3","ip":"10.10.1.3","tg0_25":"unknown","tg0_26":"unknown"},{"switch":"EMS-FSN-SW-4","ip":"10.10.1.4","tg0_25":"unknown","tg0_26":"unknown"},{"switch":"EMS-FSN-SW-5","ip":"10.10.1.5","tg0_25":"unknown","tg0_26":"unknown"},{"switch":"EMS-FSN-SW-6","ip":"10.10.1.6","tg0_25":"up","tg0_26":"down"},{"switch":"EMS-FSN-SW-7 (FOH)","ip":"10.10.1.7","tg0_25":"up","tg0_26":"up"}],
-  "access_points": [{"name":"CloudKey (Controller)","ip":"10.10.1.24","online":true,"rtt":4},{"name":"AP Regie (U6-LR)","ip":"10.10.1.21","online":true,"rtt":2},{"name":"AP Regie aussen (U7-MSH)","ip":"10.10.1.41","online":false,"rtt":0},{"name":"AP Foodtruck1 (U7-MSH)","ip":"10.10.1.42","online":false,"rtt":0}]
+  "access_points": [{"name":"CloudKey (Controller)","ip":"10.10.1.24","online":true,"rtt":4},{"name":"AP Regie (U6-LR)","ip":"10.10.1.21","online":true,"rtt":3},{"name":"AP Regie aussen (U7-MSH)","ip":"10.10.1.41","online":false,"rtt":0},{"name":"AP Foodtruck1 (U7-MSH)","ip":"10.10.1.42","online":false,"rtt":0}]
 }
