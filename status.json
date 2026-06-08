@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-06-08T07:17:44Z",
-  "timestamp_de": "08.06.2026 09:17:44",
+  "timestamp": "2026-06-08T07:18:47Z",
+  "timestamp_de": "08.06.2026 09:18:47",
   "all_ok": false,
   "errors": ["AP WLAN-Controller (10.10.1.24) ist nicht erreichbar","EMS-FSN-SW-1: Ring-Port tg0/25 ist DOWN","EMS-FSN-SW-2: Ring-Port tg0/26 ist DOWN"],
   "devices": [{"name":"FortiGate","ip":"10.10.1.254","url":"https://10.10.1.254","online":true},{"name":"EMS-FSN-SW-1","ip":"10.10.1.1","url":"http://10.10.1.1","online":true},{"name":"EMS-FSN-SW-2","ip":"10.10.1.2","url":"http://10.10.1.2","online":true}],
