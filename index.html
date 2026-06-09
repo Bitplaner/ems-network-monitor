@@ -385,7 +385,7 @@
 
 <script>
 const GITHUB_REPO = 'Bitplaner/ems-network-monitor';
-const REFRESH_INTERVAL = 30; // Sekunden für Webpage-Refresh
+const REFRESH_INTERVAL = 60; // Sekunden für Webpage-Refresh
 const DATA_MAX_AGE = 5 * 60; // 5 Min = Daten gelten als veraltet
 
 let countdown = REFRESH_INTERVAL;
@@ -625,9 +625,22 @@ async function fetchStatus() {
       `${data.timestamp_de} (${formatAge(data.timestamp)})`;
 
   } catch(e) {
-    document.getElementById('statusBanner').className = 'status-banner loading';
-    document.getElementById('statusBanner').innerHTML =
-      '<div class="status-icon">⚠</div><div class="status-text">Keine Verbindung</div>';
+    // Bei Fehler: alte Daten behalten, nur age-Banner updaten
+    const ageBanner = document.getElementById('dataAgeBanner');
+    if (window._lastData) {
+      // Daten noch vorhanden → nur Banner aktualisieren
+      const diffSec = Math.floor((new Date() - new Date(window._lastData.timestamp)) / 1000);
+      const ageStr = formatAge(window._lastData.timestamp);
+      ageBanner.style.display = 'block';
+      ageBanner.style.background = '#1a1a00';
+      ageBanner.style.border = '1px solid #5c5000';
+      ageBanner.style.color = '#fbbf24';
+      ageBanner.innerHTML = `⚠ Abruf fehlgeschlagen &nbsp;·&nbsp; Letzte Daten: ${ageStr}`;
+    } else {
+      document.getElementById('statusBanner').className = 'status-banner loading';
+      document.getElementById('statusBanner').innerHTML =
+        '<div class="status-icon">⚠</div><div class="status-text">Keine Verbindung</div>';
+    }
     console.error(e);
   }
 }
