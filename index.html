@@ -258,6 +258,22 @@
   .port-badge.up { background: #0d2b1a; color: #4ade80; border: 1px solid #166534; }
   .port-badge.down { background: #2b0d0d; color: #f87171; border: 1px solid #7f1d1d; animation: blink 1s infinite; }
   .port-badge.unknown { background: #1a1a2e; color: #666; border: 1px solid #333; }
+  .bw-badge {
+    flex: 1;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-family: monospace;
+    background: #111827;
+    border: 1px solid #1f2937;
+    color: #94a3b8;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .bw-badge span:first-child { color: #60a5fa; }
+  .bw-badge span:last-child  { color: #a78bfa; }
 
   @keyframes blink {
     0%, 100% { opacity: 1; }
@@ -512,6 +528,14 @@ function portBadge(status, name) {
   </div>`;
 }
 
+function bwBadge(rx, tx) {
+  if (rx === undefined || rx === null) return '';
+  const fmt = v => v >= 1000 ? (v/1000).toFixed(1)+'G' : v.toFixed(1)+'M';
+  return `<div class="bw-badge">
+    <span title="RX">↓${fmt(rx)}</span><span title="TX">↑${fmt(tx)}</span>
+  </div>`;
+}
+
 async function fetchStatus() {
   try {
     // GitHub API → kein CDN-Cache (raw.githubusercontent hat ~5min TTL)
@@ -607,7 +631,9 @@ async function fetchStatus() {
         <div class="ring-card-header">🔗 ${r.switch} <span style="color:#444;font-size:12px;font-family:monospace">${r.ip}</span></div>
         <div class="ring-ports">
           ${portBadge(r.tg0_25, 'tg0/25')}
+          ${bwBadge(r.bw_25_rx, r.bw_25_tx)}
           ${portBadge(r.tg0_26, 'tg0/26')}
+          ${bwBadge(r.bw_26_rx, r.bw_26_tx)}
         </div>
       </div>
     `).join('');
