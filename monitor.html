@@ -192,22 +192,31 @@ const linkEls = SEGMENTS.map((seg, i) => {
   return line;
 });
 
-// BW Labels
+// BW Labels — je Seite der Linie: → (CW/tx) und ← (CCW/rx)
 const bwEls = SEGMENTS.map((seg, i) => {
   const p1 = positions[seg.from];
   const p2 = positions[seg.to];
   const mx = (p1.x + p2.x) / 2;
   const my = (p1.y + p2.y) / 2;
 
-  const bg = svgEl('rect', { x: mx-26, y: my-14, width: 52, height: 26, rx: 4, fill: '#0d1117', opacity: 0.92 });
-  const t1 = svgEl('text', { x: mx, y: my-2, class: 'bw-text' });
-  const t2 = svgEl('text', { x: mx, y: my+11, class: 'bw-text-tx' });
-  t1.textContent = '–';
-  t2.textContent = '–';
-  gBW.appendChild(bg);
-  gBW.appendChild(t1);
-  gBW.appendChild(t2);
-  return { t1, t2 };
+  // Senkrechter Versatz zur Linie (16px)
+  const dx = p2.x - p1.x, dy = p2.y - p1.y;
+  const len = Math.sqrt(dx*dx + dy*dy) || 1;
+  const ox = (-dy / len) * 16, oy = (dx / len) * 16;
+
+  // CW-Label (→ tx): auf der "linken" Seite der Linie (Innenring)
+  const bgCW = svgEl('rect', { x: mx+ox-24, y: my+oy-12, width: 48, height: 14, rx: 3, fill: '#0d1117', opacity: 0.9 });
+  const tCW  = svgEl('text', { x: mx+ox, y: my+oy-1, class: 'bw-text' });
+  tCW.textContent = '→–';
+
+  // CCW-Label (← rx): auf der "rechten" Seite
+  const bgCCW = svgEl('rect', { x: mx-ox-24, y: my-oy-2, width: 48, height: 14, rx: 3, fill: '#0d1117', opacity: 0.9 });
+  const tCCW  = svgEl('text', { x: mx-ox, y: my-oy+9, class: 'bw-text-tx' });
+  tCCW.textContent = '←–';
+
+  gBW.appendChild(bgCW); gBW.appendChild(tCW);
+  gBW.appendChild(bgCCW); gBW.appendChild(tCCW);
+  return { tCW, tCCW };
 });
 
 // Nodes zeichnen
@@ -280,8 +289,8 @@ function render(data) {
 
     const rx = rFrom ? rFrom[seg.bw_rx_key] : null;
     const tx = rFrom ? rFrom[seg.bw_tx_key] : null;
-    bwEls[i].t1.textContent = '↓' + fmtBW(rx);
-    bwEls[i].t2.textContent = '↑' + fmtBW(tx);
+    bwEls[i].tCW.textContent  = '→' + fmtBW(tx);
+    bwEls[i].tCCW.textContent = '←' + fmtBW(rx);
   });
 
   // Gerätelist
