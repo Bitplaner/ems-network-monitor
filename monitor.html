@@ -340,7 +340,7 @@ async function fetchStatus() {
 }
 
 fetchStatus();
-setInterval(fetchStatus, 30000);
+setInterval(fetchStatus, 15000);
 setInterval(() => {
   if (!window._lastData) return;
   const sec = Math.round((new Date() - new Date(window._lastData.timestamp)) / 1000);
