@@ -13,7 +13,7 @@ body {
   height: 100vh;
   overflow: hidden;
   display: grid;
-  grid-template-rows: 46px 1fr 32px;
+  grid-template-rows: 46px auto 1fr 32px;
   grid-template-columns: 1fr 220px 260px;
   gap: 6px;
   padding: 6px;
@@ -31,9 +31,33 @@ body {
 #status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; margin-right: 8px; flex-shrink: 0; }
 #status-dot.err { background: #f87171; animation: blink 1s infinite; }
 
+/* Error Banner */
+#error-banner {
+  grid-column: 1 / -1; grid-row: 2;
+  display: none;
+  background: #450a0a;
+  border: 1px solid #7f1d1d;
+  border-radius: 8px;
+  padding: 8px 14px;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+#error-banner.visible { display: flex; }
+#error-banner .err-title {
+  font-size: 13px; font-weight: 700; color: #f87171;
+  white-space: nowrap; flex-shrink: 0;
+}
+#error-banner .err-chip {
+  background: #7f1d1d; color: #fca5a5;
+  border-radius: 4px; padding: 2px 8px;
+  font-size: 12px; font-weight: 600;
+  animation: blink 1.2s infinite;
+}
+
 /* Ring canvas area */
 #ring-area {
-  grid-column: 1; grid-row: 2;
+  grid-column: 1; grid-row: 3;
   background: #0d1117; border-radius: 10px; border: 1px solid #1f2937;
   position: relative; overflow: hidden;
 }
@@ -41,12 +65,12 @@ svg#ring-svg { width: 100%; height: 100%; }
 
 /* Side panel */
 #panel-dev {
-  grid-column: 2; grid-row: 2;
+  grid-column: 2; grid-row: 3;
   background: #111827; border-radius: 10px; border: 1px solid #1f2937;
   padding: 8px; overflow: hidden; display: flex; flex-direction: column;
 }
 #panel-ap {
-  grid-column: 3; grid-row: 2;
+  grid-column: 3; grid-row: 3;
   background: #111827; border-radius: 10px; border: 1px solid #1f2937;
   padding: 8px; overflow: hidden; display: flex; flex-direction: column;
 }
@@ -60,7 +84,7 @@ svg#ring-svg { width: 100%; height: 100%; }
 
 /* Footer */
 #footer {
-  grid-column: 1 / 4;
+  grid-column: 1 / 4; grid-row: 4;
   background: #111827; border-radius: 6px; border: 1px solid #1f2937;
   display: flex; align-items: center; padding: 0 14px; gap: 18px; font-size: 13px; color: #6b7280;
 }
@@ -103,6 +127,11 @@ svg#ring-svg { width: 100%; height: 100%; }
   </div>
   <div class="meta" id="ts">–</div>
   <div class="meta"><a href="index.html" style="color:#4b5563;text-decoration:none">→ Vollansicht</a></div>
+</div>
+
+<div id="error-banner">
+  <span class="err-title">⚠ OFFLINE:</span>
+  <span id="err-chips"></span>
 </div>
 
 <div id="ring-area">
@@ -310,6 +339,19 @@ function render(data) {
       ${a.clients > 0 ? `<span style="color:#60a5fa;font-size:11px;font-weight:700">${a.clients}👤</span>` : ''}
       <div class="${a.online ? 'dot-on' : 'dot-off'}"></div>
     </div>`).join('');
+
+  // Error Banner
+  const banner = document.getElementById('error-banner');
+  const offlineDevs = devs.filter(d => !d.online).map(d => d.name.replace('EMS-FSN-',''));
+  const offlineAPs  = aps.filter(a => !a.online).map(a => a.name);
+  const allOffline  = [...offlineDevs, ...offlineAPs];
+  if (allOffline.length > 0) {
+    document.getElementById('err-chips').innerHTML = allOffline.map(n =>
+      `<span class="err-chip">${n}</span>`).join('');
+    banner.classList.add('visible');
+  } else {
+    banner.classList.remove('visible');
+  }
 
   // Footer
   const errs = data.errors || [];
