@@ -542,9 +542,9 @@ const REMOTE_URL = 'https://bitplaner.github.io/ems-network-monitor/status.json'
 async function fetchStatus() {
   const bust = Date.now();
   let res = null;
-  for (const url of [LOCAL_URL, `${REMOTE_URL}?_=${bust}`]) {
+  for (const [url, ms] of [[LOCAL_URL, 1500], [`${REMOTE_URL}?_=${bust}`, 8000]]) {
     try {
-      const r = await fetch(url, { cache: 'no-store' });
+      const r = await fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(ms) });
       if (r.ok) { res = r; break; }
     } catch(e) { /* Fallback */ }
   }
