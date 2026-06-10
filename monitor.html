@@ -278,8 +278,8 @@ function render(data) {
     const status = blocked ? 'blocked' : portStatus;
     linkEls[i].setAttribute('class', 'ring-link ' + status);
 
-    const rx = r ? r[seg.bw_rx_key] : null;
-    const tx = r ? r[seg.bw_tx_key] : null;
+    const rx = rFrom ? rFrom[seg.bw_rx_key] : null;
+    const tx = rFrom ? rFrom[seg.bw_tx_key] : null;
     bwEls[i].t1.textContent = '↓' + fmtBW(rx);
     bwEls[i].t2.textContent = '↑' + fmtBW(tx);
   });
