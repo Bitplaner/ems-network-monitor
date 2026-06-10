@@ -288,12 +288,13 @@ function render(data) {
     <div class="dev-row">
       <span class="dev-name">${a.name}</span>
       <span class="rtt">${a.online ? a.rtt+'ms' : ''}</span>
+      ${a.clients > 0 ? `<span style="color:#60a5fa;font-size:11px;font-weight:700">${a.clients}👤</span>` : ''}
       <div class="${a.online ? 'dot-on' : 'dot-off'}"></div>
     </div>`).join('');
 
   // Footer
   const errs = data.errors || [];
-  document.getElementById('ft-ok').textContent  = data.all_ok ? '✓ Alles OK' : `⚠ ${errs.length} Fehler`;
+  document.getElementById('ft-ok').textContent  = data.all_ok ? `✓ Alles OK${data.total_clients > 0 ? ' · '+data.total_clients+' 👤' : ''}` : `⚠ ${errs.length} Fehler`;
   document.getElementById('ft-err').textContent = errs.length ? errs[0].replace(/"/g,'') : '';
 
   // Age
