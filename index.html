@@ -514,11 +514,11 @@ function portBadge(status, name) {
 
 async function fetchStatus() {
   try {
-    // raw.githubusercontent.com mit Zufalls-Parameter → kein CDN-Cache, kein API-Limit
+    // GitHub API → kein CDN-Cache (raw.githubusercontent hat ~5min TTL)
     const bust = Date.now();
     const res = await fetch(
-      `https://raw.githubusercontent.com/${GITHUB_REPO}/main/status.json?_=${bust}`,
-      { cache: 'no-store' }
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/status.json?_=${bust}`,
+      { cache: 'no-store', headers: { 'Accept': 'application/vnd.github.v3.raw' } }
     );
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
