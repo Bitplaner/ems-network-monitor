@@ -536,14 +536,20 @@ function bwBadge(rx, tx) {
   </div>`;
 }
 
+const LOCAL_URL  = 'http://10.10.1.39:8765/status.json';
+const REMOTE_URL = 'https://bitplaner.github.io/ems-network-monitor/status.json';
+
 async function fetchStatus() {
+  const bust = Date.now();
+  let res = null;
+  for (const url of [LOCAL_URL, `${REMOTE_URL}?_=${bust}`]) {
+    try {
+      const r = await fetch(url, { cache: 'no-store' });
+      if (r.ok) { res = r; break; }
+    } catch(e) { /* Fallback */ }
+  }
   try {
-    // GitHub Pages URL → kein API Rate Limit, kurzer Cache
-    const bust = Date.now();
-    const res = await fetch(
-      `https://bitplaner.github.io/ems-network-monitor/status.json?_=${bust}`,
-      { cache: 'no-store' }
-    );
+    if (!res) throw new Error('Kein Server erreichbar');
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
 
