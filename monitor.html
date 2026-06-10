@@ -307,8 +307,8 @@ async function fetchStatus() {
   try {
     const bust = Date.now();
     const res = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/status.json?_=${bust}`,
-      { cache: 'no-store', headers: { 'Accept': 'application/vnd.github.v3.raw' } }
+      `https://bitplaner.github.io/ems-network-monitor/status.json?_=${bust}`,
+      { cache: 'no-store' }
     );
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
