@@ -13,8 +13,8 @@ body {
   height: 100vh;
   overflow: hidden;
   display: grid;
-  grid-template-rows: 40px 1fr 28px;
-  grid-template-columns: 1fr 220px;
+  grid-template-rows: 46px 1fr 32px;
+  grid-template-columns: 1fr 260px;
   gap: 6px;
   padding: 6px;
 }
@@ -26,8 +26,8 @@ body {
   background: #111827; border-radius: 8px; padding: 0 14px;
   border: 1px solid #1f2937;
 }
-#header .title { font-size: 14px; font-weight: 700; color: #f1f5f9; }
-#header .meta  { font-size: 11px; color: #6b7280; }
+#header .title { font-size: 17px; font-weight: 700; color: #f1f5f9; }
+#header .meta  { font-size: 13px; color: #6b7280; }
 #status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; margin-right: 8px; flex-shrink: 0; }
 #status-dot.err { background: #f87171; animation: blink 1s infinite; }
 
@@ -45,19 +45,19 @@ svg#ring-svg { width: 100%; height: 100%; }
   display: flex; flex-direction: column; gap: 5px; overflow: hidden;
 }
 .side-section { background: #111827; border-radius: 8px; border: 1px solid #1f2937; padding: 7px; }
-.side-title { font-size: 9px; text-transform: uppercase; color: #4b5563; letter-spacing: 1px; margin-bottom: 5px; }
-.dev-row { display: flex; justify-content: space-between; align-items: center; font-size: 10px; padding: 2px 0; border-bottom: 1px solid #1a1f2e; }
+.side-title { font-size: 11px; text-transform: uppercase; color: #4b5563; letter-spacing: 1px; margin-bottom: 6px; }
+.dev-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 3px 0; border-bottom: 1px solid #1a1f2e; }
 .dev-row:last-child { border-bottom: none; }
-.dev-name { color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; }
-.dot-on  { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
-.dot-off { width: 6px; height: 6px; border-radius: 50%; background: #f87171; flex-shrink: 0; animation: blink 1s infinite; }
-.rtt { color: #6b7280; font-size: 9px; min-width: 30px; text-align: right; }
+.dev-name { color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+.dot-on  { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
+.dot-off { width: 8px; height: 8px; border-radius: 50%; background: #f87171; flex-shrink: 0; animation: blink 1s infinite; }
+.rtt { color: #6b7280; font-size: 11px; min-width: 36px; text-align: right; }
 
 /* Footer */
 #footer {
   grid-column: 1 / -1;
   background: #111827; border-radius: 6px; border: 1px solid #1f2937;
-  display: flex; align-items: center; padding: 0 12px; gap: 16px; font-size: 10px; color: #6b7280;
+  display: flex; align-items: center; padding: 0 14px; gap: 18px; font-size: 13px; color: #6b7280;
 }
 #footer span { color: #94a3b8; }
 
@@ -69,9 +69,9 @@ svg#ring-svg { width: 100%; height: 100%; }
 .sw-circle.up   { fill: #0d2b1a; stroke: #166534; }
 .sw-circle.down { fill: #2b0d0d; stroke: #7f1d1d; animation: blink 1s infinite; }
 .sw-circle.unknown { fill: #1a1a2e; stroke: #374151; }
-.sw-label { fill: #e2e8f0; font-size: 11px; font-weight: 700; text-anchor: middle; pointer-events: none; }
-.sw-sublabel { fill: #6b7280; font-size: 8px; text-anchor: middle; pointer-events: none; }
-.sw-ip { fill: #4b5563; font-size: 7px; text-anchor: middle; pointer-events: none; }
+.sw-label { fill: #e2e8f0; font-size: 15px; font-weight: 700; text-anchor: middle; pointer-events: none; }
+.sw-sublabel { fill: #94a3b8; font-size: 11px; text-anchor: middle; pointer-events: none; }
+.sw-ip { fill: #4b5563; font-size: 9px; text-anchor: middle; pointer-events: none; }
 
 /* Ring link */
 .ring-link { stroke-width: 2; fill: none; transition: stroke 0.3s; }
@@ -82,8 +82,8 @@ svg#ring-svg { width: 100%; height: 100%; }
 
 /* BW label on links */
 .bw-label-bg { fill: #0d1117; rx: 3; }
-.bw-text { fill: #60a5fa; font-size: 8px; text-anchor: middle; pointer-events: none; }
-.bw-text-tx { fill: #a78bfa; font-size: 8px; text-anchor: middle; pointer-events: none; }
+.bw-text { fill: #60a5fa; font-size: 11px; text-anchor: middle; pointer-events: none; }
+.bw-text-tx { fill: #a78bfa; font-size: 11px; text-anchor: middle; pointer-events: none; }
 
 /* STP blocked indicator */
 .stp-badge { fill: #854d0e; font-size: 7px; text-anchor: middle; }
@@ -147,7 +147,7 @@ const SWITCHES = [
 
 // Positionen im SVG (Heptagon, 600x500, Mittelpunkt 300,245, Radius 175)
 const N = 7;
-const CX = 295, CY = 240, R = 175;
+const CX = 295, CY = 245, R = 185;
 const positions = SWITCHES.map((_, i) => {
   // Start oben (SW1 oben mitte), im Uhrzeigersinn
   const angle = (i * 2 * Math.PI / N) - Math.PI / 2;
@@ -195,9 +195,9 @@ const bwEls = SEGMENTS.map((seg, i) => {
   const mx = (p1.x + p2.x) / 2;
   const my = (p1.y + p2.y) / 2;
 
-  const bg = svgEl('rect', { x: mx-20, y: my-12, width: 40, height: 20, rx: 3, fill: '#0d1117', opacity: 0.9 });
+  const bg = svgEl('rect', { x: mx-26, y: my-14, width: 52, height: 26, rx: 4, fill: '#0d1117', opacity: 0.92 });
   const t1 = svgEl('text', { x: mx, y: my-2, class: 'bw-text' });
-  const t2 = svgEl('text', { x: mx, y: my+8, class: 'bw-text-tx' });
+  const t2 = svgEl('text', { x: mx, y: my+11, class: 'bw-text-tx' });
   t1.textContent = '–';
   t2.textContent = '–';
   gBW.appendChild(bg);
@@ -209,12 +209,12 @@ const bwEls = SEGMENTS.map((seg, i) => {
 // Nodes zeichnen
 const nodeEls = SWITCHES.map((sw, i) => {
   const { x, y } = positions[i];
-  const r = 34;
+  const r = 42;
 
   const circle = svgEl('circle', { cx: x, cy: y, r, class: 'sw-circle unknown', 'stroke-width': 2 });
-  const label  = svgEl('text',   { x, y: y - 3, class: 'sw-label' });
-  const sub    = svgEl('text',   { x, y: y + 9, class: 'sw-sublabel' });
-  const ip     = svgEl('text',   { x, y: y + 19, class: 'sw-ip' });
+  const label  = svgEl('text',   { x, y: y - 4, class: 'sw-label' });
+  const sub    = svgEl('text',   { x, y: y + 11, class: 'sw-sublabel' });
+  const ip     = svgEl('text',   { x, y: y + 23, class: 'sw-ip' });
 
   label.textContent = sw.short;
   sub.textContent   = sw.name;
