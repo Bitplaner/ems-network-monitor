@@ -82,6 +82,52 @@ svg#ring-svg { width: 100%; height: 100%; }
 .dot-off { width: 8px; height: 8px; border-radius: 50%; background: #f87171; flex-shrink: 0; animation: blink 1s infinite; }
 .rtt { color: #6b7280; font-size: 11px; min-width: 36px; text-align: right; }
 
+/* VLAN Overlay */
+#vlan-overlay {
+  display: none;
+  position: absolute; inset: 0; z-index: 10;
+  background: #0d1117ee;
+  border-radius: 10px;
+  padding: 16px;
+  overflow-y: auto;
+}
+#vlan-overlay.visible { display: block; }
+#vlan-overlay h2 {
+  font-size: 13px; text-transform: uppercase; letter-spacing: 1px;
+  color: #4b5563; margin-bottom: 12px;
+}
+.vlan-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.vlan-table th {
+  background: #1f2937; color: #6b7280; font-weight: 600;
+  text-align: left; padding: 5px 10px; border-bottom: 1px solid #374151;
+  text-transform: uppercase; font-size: 10px; letter-spacing: .5px;
+}
+.vlan-table td { padding: 5px 10px; border-bottom: 1px solid #1a1f2e; color: #94a3b8; vertical-align: top; }
+.vlan-table tr:last-child td { border-bottom: none; }
+.vlan-table tr:hover td { background: #111827; }
+.vlan-id { color: #60a5fa; font-weight: 700; font-size: 13px; }
+.vlan-name { color: #e2e8f0; font-weight: 600; }
+.port-range { color: #6b7280; font-size: 11px; }
+.vlan-badge {
+  display: inline-block; border-radius: 3px; padding: 1px 6px;
+  font-size: 10px; font-weight: 700; margin-right: 3px; margin-bottom: 2px;
+}
+.badge-trunk  { background: #1e3a5f; color: #60a5fa; }
+.badge-access { background: #1a2e1a; color: #4ade80; }
+.badge-mgmt   { background: #2d1f3d; color: #a78bfa; }
+#vlan-close {
+  position: absolute; top: 12px; right: 14px;
+  background: none; border: 1px solid #374151; border-radius: 5px;
+  color: #6b7280; font-size: 12px; padding: 3px 10px; cursor: pointer;
+}
+#vlan-close:hover { color: #e2e8f0; border-color: #6b7280; }
+#vlan-btn {
+  background: none; border: 1px solid #374151; border-radius: 5px;
+  color: #6b7280; font-size: 11px; padding: 2px 9px; cursor: pointer;
+  margin-left: auto;
+}
+#vlan-btn:hover { color: #e2e8f0; border-color: #6b7280; }
+
 /* Footer */
 #footer {
   grid-column: 1 / 4; grid-row: 4;
@@ -135,6 +181,59 @@ svg#ring-svg { width: 100%; height: 100%; }
 </div>
 
 <div id="ring-area">
+  <div id="vlan-overlay">
+    <button id="vlan-close" onclick="document.getElementById('vlan-overlay').classList.remove('visible')">✕ Schließen</button>
+    <h2>VLAN Konfiguration — alle Switches identisch</h2>
+    <table class="vlan-table">
+      <thead>
+        <tr>
+          <th>VLAN</th>
+          <th>Name</th>
+          <th>Zweck</th>
+          <th>Ports (tagged trunk)</th>
+          <th>Ports (untagged/access)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="vlan-id">1</td>
+          <td class="vlan-name">Default / Management</td>
+          <td><span class="vlan-badge badge-mgmt">Management</span></td>
+          <td><span class="vlan-badge badge-trunk">ge0/1 (NVR)</span> <span class="vlan-badge badge-trunk">tg0/25</span> <span class="vlan-badge badge-trunk">tg0/26</span></td>
+          <td class="port-range">ge0/1–10 (native untagged)</td>
+        </tr>
+        <tr>
+          <td class="vlan-id">10</td>
+          <td class="vlan-name">NVRKamera</td>
+          <td><span class="vlan-badge badge-access">Kamera</span></td>
+          <td><span class="vlan-badge badge-trunk">ge0/1</span> <span class="vlan-badge badge-trunk">tg0/25</span> <span class="vlan-badge badge-trunk">tg0/26</span></td>
+          <td class="port-range">ge0/17–24 (pvid 10)</td>
+        </tr>
+        <tr>
+          <td class="vlan-id">30</td>
+          <td class="vlan-name">WLAN-EMS-GmbH</td>
+          <td><span class="vlan-badge badge-access">WLAN</span></td>
+          <td><span class="vlan-badge badge-trunk">ge0/1–10</span> <span class="vlan-badge badge-trunk">tg0/25</span> <span class="vlan-badge badge-trunk">tg0/26</span></td>
+          <td class="port-range">—</td>
+        </tr>
+        <tr>
+          <td class="vlan-id">40</td>
+          <td class="vlan-name">Cashless</td>
+          <td><span class="vlan-badge badge-access">Cashless</span></td>
+          <td><span class="vlan-badge badge-trunk">ge0/1–10</span> <span class="vlan-badge badge-trunk">tg0/25</span> <span class="vlan-badge badge-trunk">tg0/26</span></td>
+          <td class="port-range">ge0/15–16 (pvid 40)</td>
+        </tr>
+        <tr>
+          <td class="vlan-id">70</td>
+          <td class="vlan-name">VLAN70</td>
+          <td><span class="vlan-badge badge-access">WLAN Gast</span></td>
+          <td><span class="vlan-badge badge-trunk">ge0/1–10</span> <span class="vlan-badge badge-trunk">tg0/25</span> <span class="vlan-badge badge-trunk">tg0/26</span></td>
+          <td class="port-range">ge0/11–14 (pvid 70)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:14px;font-size:11px;color:#374151">Stand: Backup 10.06.2026 · tg0/25+26 = Ring-Uplinks (alle VLANs getaggt)</p>
+  </div>
   <svg id="ring-svg" viewBox="0 0 600 500" preserveAspectRatio="xMidYMid meet">
     <!-- Links werden per JS gezeichnet -->
     <g id="links"></g>
@@ -159,7 +258,8 @@ svg#ring-svg { width: 100%; height: 100%; }
   <span id="ft-ok">–</span>
   <span id="ft-err">–</span>
   <span id="ft-age">–</span>
-  <span style="margin-left:auto;color:#374151">EMS Network Monitor</span>
+  <button id="vlan-btn" onclick="document.getElementById('vlan-overlay').classList.toggle('visible')">⊞ VLANs</button>
+  <span style="color:#374151">EMS Network Monitor</span>
 </div>
 
 <script>
