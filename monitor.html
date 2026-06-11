@@ -448,12 +448,22 @@ function render(data) {
   });
 
   // Gerätelist
+  const fg = data.fortigate || null;
   const devList = document.getElementById('dev-list');
-  devList.innerHTML = devs.map(d => `
-    <div class="dev-row">
+  devList.innerHTML = devs.map(d => {
+    const isFG = d.ip === '10.10.1.254';
+    const fgBadges = (isFG && fg && d.online) ? `
+      <span style="font-size:10px;color:#6b7280;margin-left:4px">
+        CPU&nbsp;<span style="color:${fg.cpu>80?'#f87171':fg.cpu>50?'#fcd34d':'#4ade80'}">${fg.cpu}%</span>
+        &nbsp;RAM&nbsp;<span style="color:${fg.mem>85?'#f87171':fg.mem>65?'#fcd34d':'#4ade80'}">${fg.mem}%</span>
+        &nbsp;<span style="color:#60a5fa">${fg.sessions}S</span>
+      </span>` : '';
+    return `<div class="dev-row">
       <span class="dev-name">${d.name.replace('EMS-FSN-','')}</span>
+      ${fgBadges}
       <div class="${d.online ? 'dot-on' : 'dot-off'}"></div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   // AP List
   const apList = document.getElementById('ap-list');
