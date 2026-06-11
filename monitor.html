@@ -183,56 +183,83 @@ svg#ring-svg { width: 100%; height: 100%; }
 <div id="ring-area">
   <div id="vlan-overlay">
     <button id="vlan-close" onclick="document.getElementById('vlan-overlay').classList.remove('visible')">✕ Schließen</button>
-    <h2>VLAN Konfiguration — alle Switches identisch</h2>
+    <h2>Port-VLAN Konfiguration — alle Switches identisch · Stand: Backup 10.06.2026</h2>
     <table class="vlan-table">
       <thead>
         <tr>
-          <th>VLAN</th>
-          <th>Name</th>
-          <th>Zweck</th>
-          <th>Ports (tagged trunk)</th>
-          <th>Ports (untagged/access)</th>
+          <th style="width:80px">Port</th>
+          <th style="width:70px">Modus</th>
+          <th>VLANs (tagged)</th>
+          <th style="width:110px">Native / PVID</th>
+          <th>Hinweis</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="vlan-id">1</td>
-          <td class="vlan-name">Default / Management</td>
-          <td><span class="vlan-badge badge-mgmt">Management</span></td>
-          <td><span class="vlan-badge badge-trunk">ge0/1 (NVR)</span> <span class="vlan-badge badge-trunk">tg0/25</span> <span class="vlan-badge badge-trunk">tg0/26</span></td>
-          <td class="port-range">ge0/1–10 (native untagged)</td>
+          <td class="vlan-id">ge0/1</td>
+          <td><span class="vlan-badge badge-trunk">Trunk</span></td>
+          <td><span class="vlan-badge badge-trunk">1</span><span class="vlan-badge badge-trunk">10</span><span class="vlan-badge badge-trunk">30</span><span class="vlan-badge badge-trunk">40</span><span class="vlan-badge badge-trunk">70</span></td>
+          <td>VLAN 1 (untagged)</td>
+          <td class="port-range">NVR / Kamera-Recorder</td>
         </tr>
         <tr>
-          <td class="vlan-id">10</td>
-          <td class="vlan-name">NVRKamera</td>
-          <td><span class="vlan-badge badge-access">Kamera</span></td>
-          <td><span class="vlan-badge badge-trunk">ge0/1</span> <span class="vlan-badge badge-trunk">tg0/25</span> <span class="vlan-badge badge-trunk">tg0/26</span></td>
-          <td class="port-range">ge0/17–24 (pvid 10)</td>
+          <td class="vlan-id">ge0/2–10</td>
+          <td><span class="vlan-badge badge-trunk">Trunk</span></td>
+          <td><span class="vlan-badge badge-trunk">1</span><span class="vlan-badge badge-trunk">30</span><span class="vlan-badge badge-trunk">40</span><span class="vlan-badge badge-trunk">70</span></td>
+          <td>VLAN 1 (untagged)</td>
+          <td class="port-range">AP-Downlinks (WLAN, Cashless, Gast)</td>
         </tr>
         <tr>
-          <td class="vlan-id">30</td>
-          <td class="vlan-name">WLAN-EMS-GmbH</td>
-          <td><span class="vlan-badge badge-access">WLAN</span></td>
-          <td><span class="vlan-badge badge-trunk">ge0/1–10</span> <span class="vlan-badge badge-trunk">tg0/25</span> <span class="vlan-badge badge-trunk">tg0/26</span></td>
-          <td class="port-range">—</td>
+          <td class="vlan-id">ge0/11–12</td>
+          <td><span class="vlan-badge badge-access">Access</span></td>
+          <td>—</td>
+          <td>VLAN 70</td>
+          <td class="port-range">VLAN70 · WLAN Gast</td>
         </tr>
         <tr>
-          <td class="vlan-id">40</td>
-          <td class="vlan-name">Cashless</td>
-          <td><span class="vlan-badge badge-access">Cashless</span></td>
-          <td><span class="vlan-badge badge-trunk">ge0/1–10</span> <span class="vlan-badge badge-trunk">tg0/25</span> <span class="vlan-badge badge-trunk">tg0/26</span></td>
-          <td class="port-range">ge0/15–16 (pvid 40)</td>
+          <td class="vlan-id">ge0/13</td>
+          <td><span class="vlan-badge badge-access">Access</span></td>
+          <td>—</td>
+          <td>VLAN 1</td>
+          <td class="port-range">Default (kein pvid gesetzt)</td>
         </tr>
         <tr>
-          <td class="vlan-id">70</td>
-          <td class="vlan-name">VLAN70</td>
-          <td><span class="vlan-badge badge-access">WLAN Gast</span></td>
-          <td><span class="vlan-badge badge-trunk">ge0/1–10</span> <span class="vlan-badge badge-trunk">tg0/25</span> <span class="vlan-badge badge-trunk">tg0/26</span></td>
-          <td class="port-range">ge0/11–14 (pvid 70)</td>
+          <td class="vlan-id">ge0/14</td>
+          <td><span class="vlan-badge badge-access">Access</span></td>
+          <td>—</td>
+          <td>VLAN 70</td>
+          <td class="port-range">VLAN70 · WLAN Gast</td>
+        </tr>
+        <tr>
+          <td class="vlan-id">ge0/15–16</td>
+          <td><span class="vlan-badge badge-access">Access</span></td>
+          <td>—</td>
+          <td>VLAN 40</td>
+          <td class="port-range">Cashless</td>
+        </tr>
+        <tr>
+          <td class="vlan-id">ge0/17–24</td>
+          <td><span class="vlan-badge badge-access">Access</span></td>
+          <td>—</td>
+          <td>VLAN 10</td>
+          <td class="port-range">NVRKamera</td>
+        </tr>
+        <tr style="border-top:2px solid #374151">
+          <td class="vlan-id">tg0/25</td>
+          <td><span class="vlan-badge badge-trunk">Trunk</span></td>
+          <td><span class="vlan-badge badge-trunk">1</span><span class="vlan-badge badge-trunk">10</span><span class="vlan-badge badge-trunk">30</span><span class="vlan-badge badge-trunk">40</span><span class="vlan-badge badge-trunk">70</span></td>
+          <td>—</td>
+          <td class="port-range">Ring-Uplink → nächster Switch (STP)</td>
+        </tr>
+        <tr>
+          <td class="vlan-id">tg0/26</td>
+          <td><span class="vlan-badge badge-trunk">Trunk</span></td>
+          <td><span class="vlan-badge badge-trunk">1</span><span class="vlan-badge badge-trunk">10</span><span class="vlan-badge badge-trunk">30</span><span class="vlan-badge badge-trunk">40</span><span class="vlan-badge badge-trunk">70</span></td>
+          <td>—</td>
+          <td class="port-range">Ring-Uplink ← vorheriger Switch (STP)</td>
         </tr>
       </tbody>
     </table>
-    <p style="margin-top:14px;font-size:11px;color:#374151">Stand: Backup 10.06.2026 · tg0/25+26 = Ring-Uplinks (alle VLANs getaggt)</p>
   </div>
   <svg id="ring-svg" viewBox="0 0 600 500" preserveAspectRatio="xMidYMid meet">
     <!-- Links werden per JS gezeichnet -->
