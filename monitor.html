@@ -268,6 +268,18 @@ const nodeEls = SWITCHES.map((sw, i) => {
   return { circle };
 });
 
+function fmtSince(since) {
+  if (!since) return '';
+  // since = "DD.MM.YYYY HH:MM:SS" → "seit HH:MM" wenn heute, sonst "seit DD.MM. HH:MM"
+  const m = since.match(/(\d{2})\.(\d{2})\.(\d{4}) (\d{2}:\d{2})/);
+  if (!m) return '';
+  const today = new Date();
+  const isToday = parseInt(m[1]) === today.getDate() &&
+                  parseInt(m[2]) === (today.getMonth()+1) &&
+                  parseInt(m[3]) === today.getFullYear();
+  return isToday ? `seit ${m[4]}` : `seit ${m[1]}.${m[2]}. ${m[4]}`;
+}
+
 function fmtBW(v) {
   if (v === undefined || v === null) return '–';
   if (v >= 1000) return (v/1000).toFixed(1)+'G';
@@ -342,21 +354,24 @@ function render(data) {
 
   // Error Banner
   const banner = document.getElementById('error-banner');
-  const offlineDevs = devs.filter(d => !d.online).map(d => d.name.replace('EMS-FSN-',''));
-  const offlineAPs  = aps.filter(a => !a.online).map(a => a.name);
-  const allOffline  = [...offlineDevs, ...offlineAPs];
-  if (allOffline.length > 0) {
-    document.getElementById('err-chips').innerHTML = allOffline.map(n =>
-      `<span class="err-chip">${n}</span>`).join('');
+  const errsObj = Array.isArray(data.errors) ? data.errors : [];
+  const errObjs = errsObj.map(e => typeof e === 'object' ? e : {msg: e, since: null});
+  if (errObjs.length > 0) {
+    document.getElementById('err-chips').innerHTML = errObjs.map(e => {
+      const sinceStr = e.since ? fmtSince(e.since) : '';
+      const label = e.msg.replace(/EMS-FSN-SW-\d+ \(([^)]+)\).*/, '$1')
+                         .replace(/AP ([^ ]+).*/, '$1')
+                         .replace(/EMS-FSN-/, '');
+      return `<span class="err-chip" title="${e.msg}${e.since ? ' · seit '+e.since : ''}">${label}${sinceStr ? ' <span style="opacity:.7;font-weight:400">'+sinceStr+'</span>' : ''}</span>`;
+    }).join('');
     banner.classList.add('visible');
   } else {
     banner.classList.remove('visible');
   }
 
   // Footer
-  const errs = data.errors || [];
-  document.getElementById('ft-ok').textContent  = data.all_ok ? `✓ Alles OK${data.total_clients > 0 ? ' · '+data.total_clients+' 👤' : ''}` : `⚠ ${errs.length} Fehler`;
-  document.getElementById('ft-err').textContent = errs.length ? errs[0].replace(/"/g,'') : '';
+  document.getElementById('ft-ok').textContent  = data.all_ok ? `✓ Alles OK${data.total_clients > 0 ? ' · '+data.total_clients+' 👤' : ''}` : `⚠ ${errObjs.length} Fehler`;
+  document.getElementById('ft-err').textContent = errObjs.length ? (errObjs[0].msg || errObjs[0]).toString().replace(/"/g,'') : '';
 
   // Age
   const sec = Math.round((new Date() - new Date(data.timestamp)) / 1000);
