@@ -421,6 +421,13 @@ function isDataStale(isoString) {
   return diffSec > DATA_MAX_AGE;
 }
 
+// Normalisiert einen Fehler-Eintrag (String oder Objekt) → {msg, since}
+function normErr(e) {
+  if (typeof e === 'object' && e !== null) return { msg: e.msg || String(e), since: e.since || null };
+  return { msg: String(e), since: null };
+}
+function errMsg(e) { return normErr(e).msg; }
+
 // ── Fehler-Bestätigung (localStorage) ────────────────────────────────────────
 function getAcked() {
   try { return new Set(JSON.parse(localStorage.getItem('ackedErrors') || '[]')); }
@@ -451,13 +458,25 @@ function processErrors(currentErrors) {
 
   // Fehler die verschwunden waren und jetzt wieder da sind → Bestätigung löschen
   for (const err of currentErrors) {
-    if (acked.has(err) && !prev.has(err)) {
-      acked.delete(err);
+    const msg = errMsg(err);
+    if (acked.has(msg) && !prev.has(msg)) {
+      acked.delete(msg);
     }
   }
   saveAcked(acked);
-  savePrevErrors(new Set(currentErrors));
+  savePrevErrors(new Set(currentErrors.map(errMsg)));
   return acked;
+}
+
+function fmtSince(since) {
+  if (!since) return '';
+  const m = since.match(/(\d{2})\.(\d{2})\.(\d{4}) (\d{2}:\d{2})/);
+  if (!m) return '';
+  const today = new Date();
+  const isToday = parseInt(m[1]) === today.getDate() &&
+                  parseInt(m[2]) === (today.getMonth()+1) &&
+                  parseInt(m[3]) === today.getFullYear();
+  return isToday ? `seit ${m[4]}` : `seit ${m[1]}.${m[2]}. ${m[4]}`;
 }
 
 function renderErrors(errors) {
@@ -465,15 +484,16 @@ function renderErrors(errors) {
   const errorDiv = document.getElementById('errorList');
   if (!errors || errors.length === 0) {
     errorDiv.innerHTML = '';
-    // Event-Listener neu setzen nach innerHTML-Reset
     return;
   }
   errorDiv.innerHTML = `<div class="errors">
     <h3>Fehler</h3>
     ${errors.map((e, i) => {
-      const isAcked = acked.has(e);
+      const { msg, since } = normErr(e);
+      const isAcked = acked.has(msg);
+      const sinceStr = since ? fmtSince(since) : '';
       return `<div class="error-item">
-        <span class="error-text ${isAcked ? 'acked' : ''}">${e}</span>
+        <span class="error-text ${isAcked ? 'acked' : ''}">${msg}${sinceStr ? ` <span style="color:#6b7280;font-size:12px">(${sinceStr})</span>` : ''}</span>
         <button class="ack-btn ${isAcked ? 'acked' : ''}" data-idx="${i}">
           ${isAcked ? '✓ Bestätigt' : 'Bestätigen'}
         </button>
@@ -481,18 +501,17 @@ function renderErrors(errors) {
     }).join('')}
   </div>`;
 
-  // Event-Listener auf alle Buttons setzen — Klick togglet Bestätigung
   errorDiv.querySelectorAll('.ack-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const idx = parseInt(btn.dataset.idx);
-      const err = errors[idx];
+      const msg = errMsg(errors[idx]);
       const acked = getAcked();
-      if (acked.has(err)) {
-        acked.delete(err);
+      if (acked.has(msg)) {
+        acked.delete(msg);
         saveAcked(acked);
       } else {
-        ackError(err);
-        return;
+        acked.add(msg);
+        saveAcked(acked);
       }
       renderErrors(window._lastErrors || []);
       updateBanner(window._lastData);
@@ -505,7 +524,7 @@ function updateBanner(data) {
   const acked   = getAcked();
   const errors  = data.errors || [];
   const stale   = isDataStale(data.timestamp);
-  const allAcked = errors.length > 0 && errors.every(e => acked.has(e));
+  const allAcked = errors.length > 0 && errors.every(e => acked.has(errMsg(e)));
   const banner  = document.getElementById('statusBanner');
 
   if (stale) {
